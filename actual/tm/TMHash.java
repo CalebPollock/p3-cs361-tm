@@ -25,9 +25,9 @@ public class TMHash {
 
    public TMAction get(TMAction key) {
 
-      int pos = key.block.hash();
+      int pos = key.block.hash()%modulo;
 
-      entry head = table[key.state][key.direction][mod(pos,modulo)];
+      entry head = table[key.state][key.direction][pos];
 
       while (head != null && !head.k.equals(key.block))
          head = head.n;
@@ -40,7 +40,7 @@ public class TMHash {
 
    public void put(TMAction key, TMAction val) {
 
-      int pos = mod(key.block.hash(),modulo);
+      int pos = (key.block.hash()%modulo);
 
       entry e = new entry();
       e.k = key.block;

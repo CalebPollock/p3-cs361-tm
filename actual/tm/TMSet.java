@@ -21,7 +21,7 @@ public class TMSet {
 
    public TMBlock get(TMBlock key) {
 
-      entry head = table[mod(key.hash(),modulo)];
+      entry head = table[(key.hash())%modulo];
 
       while (head != null && !head.k.equals(key))
          head = head.n;
@@ -36,7 +36,7 @@ public class TMSet {
 
       ++size;
 
-      int pos = mod(key.hash(),modulo);
+      int pos = (key.hash()%modulo);
 
       entry e = new entry();
       e.k = key;

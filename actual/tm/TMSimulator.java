@@ -8,12 +8,12 @@ import java.nio.file.*;
 class TMSimulator {
    public static TMHash cache;
    public static TMSet original;
+   public static final int block_size = 256;
    public static void main(String[] args) throws IOException {
 
       final int debug = 0;
       final int timing = 0;
-      final int verify = 0;
-      final int block_size = 256;
+      final int verify = 1;
       final int hash_size = 11119;
 
       int cycles = 0;
@@ -23,6 +23,7 @@ class TMSimulator {
 
       tStart = System.nanoTime();
 
+      original = new TMSet(hash_size);
       TM machine = new TM(Paths.get(args[0]));
 
       if (timing == 1)
@@ -31,20 +32,28 @@ class TMSimulator {
       tStart = System.nanoTime();
 
       cache = new TMHash(machine.state_count,hash_size);
-      original = new TMSet(hash_size);
 
       if (timing == 1)
          System.out.printf("allocation took %fs\n",(double)(System.nanoTime() - tStart) / 1e9);
 
-      TMNode curr = new TMNode();
+      TMBlock empty = new TMBlock(new int[block_size]);
+      original.put(empty);
+
+      TMNode curr = new TMNode();;
 
       TMNode min = curr, max = curr;
-      int l_min = 255;
+      int l_min = block_size;
       int l_max = 0;
 
-      TMBlock empty = new TMBlock(new int[block_size]);
-      curr.b = empty;
-      original.put(empty);
+      if (machine.head == null) {
+         curr.b = empty;
+      }
+      else {
+         curr = machine.head;
+         l_min = 0; l_max = machine.tail.b.bound.max;
+         min = machine.head;
+         max = machine.tail;
+      }
 
       TMAction act = new TMAction();
       act.state = 0;
@@ -86,9 +95,9 @@ class TMSimulator {
          curr.b = act.block;
 
          if (curr == max && curr.b.max() > l_max)
-            l_max = curr.b.max();
-         if (curr == min && curr.b.min() < l_min)
-            l_min = curr.b.min();
+            l_max = curr.b.bound.max;
+         else if (curr == min && curr.b.min() < l_min)
+            l_min = curr.b.bound.min;
 
          if (act.state == machine.end_state)
             break;
@@ -99,7 +108,7 @@ class TMSimulator {
                curr.l.r = curr;
                curr.l.b = empty;
                min = curr.l;
-               l_min = 255;
+               l_min = block_size;
             }
             curr = curr.l;
          }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class TMBlock {
 
-   private final TMBound bound;
+   public TMBound bound;
    private final int[] arr;
    private final int hash_val;
    
@@ -43,7 +43,7 @@ public class TMBlock {
          res *= 0x01000193;
       }
 
-      return res;
+      return Math.abs(res);
    }
 
    public void eval(TMAction args, TM machine) {

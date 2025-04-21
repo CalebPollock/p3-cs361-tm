@@ -12,6 +12,8 @@ public class TM {
    public int state_count;
    public final int end_state;
    public int alphabet;
+   public TMNode head = null;
+   public TMNode tail = null;
 
    TM(Path init) throws IOException {
 
@@ -50,6 +52,79 @@ public class TM {
 
       }
 
+      if (lines.hasNext()) {
+         String tape = lines.next();
+
+         TMNode curr = head;
+
+         if (tape.length() != 0) {
+
+            int pos = 0;
+            int blocks = 0;
+
+            int[] arr = new int[TMSimulator.block_size];
+
+            for (int i = 0; i < tape.length(); ++i) {
+               if (pos == TMSimulator.block_size) {
+                  ++blocks;
+                  if (curr == null) {
+                     curr = new TMNode();
+                     curr.b = new TMBlock(arr);
+                     curr.b.bound.min = 0;
+                     curr.b.bound.max = TMSimulator.block_size-1;
+                     head = curr;
+
+                     TMSimulator.original.put(curr.b);
+                  }
+                  else {
+                     TMNode xd = new TMNode();
+                     xd.b = new TMBlock(arr);
+                     xd.b.bound.min = 0;
+                     xd.b.bound.max = TMSimulator.block_size-1;
+                     curr.r = xd;
+                     xd.l = curr;
+                     curr = xd;
+
+                     TMSimulator.original.put(xd.b);
+                  }
+                  arr = new int[TMSimulator.block_size];
+                  pos = 0;
+               }
+
+               arr[pos] = tape.charAt(i)-48;
+               ++pos;
+            }
+
+            if (pos != 0) {
+                  ++blocks;
+               if (curr == null) {
+                  curr = new TMNode();
+                  curr.b = new TMBlock(arr);
+                  curr.b.bound.min = 0;
+                  curr.b.bound.max = pos-1;
+                  head = curr;
+
+                  TMSimulator.original.put(curr.b);
+               }
+               else {
+                  TMNode xd = new TMNode();
+                  xd.b = new TMBlock(arr);
+                  xd.b.bound.min = 0;
+                  xd.b.bound.max = pos-1;
+                  curr.r = xd;
+                  xd.l = curr;
+                  curr = xd;
+
+                  TMSimulator.original.put(xd.b);
+               }
+            }
+
+            System.out.println(blocks);
+
+            tail = curr;
+         }
+      }
+
    }
 
    void compute(TMAction args, int[] tape, TMBound bound) {
@@ -64,6 +139,11 @@ public class TM {
 
       while (pos >= 0 && pos < tape.length) {
 
+         if (pos < bound.min)
+            bound.min = pos;
+         else if (pos > bound.max)
+            bound.max = pos;
+
          act = states[state][tape[pos]];
          /*
          tape[pos] = ((act>>1)&0xf);
@@ -73,11 +153,6 @@ public class TM {
          tape[pos] = act.new_value;
          state = act.state;
          pos += act.direction;
-
-         if (pos < bound.min)
-            bound.min = pos;
-          if (pos > bound.max)
-            bound.max = pos;
 
          if (state == end_state)
             break;
