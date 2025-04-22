@@ -11,30 +11,40 @@ class TMSimulator {
    public static final int block_size = 256;
    public static void main(String[] args) throws IOException {
 
+      /*
       final int debug = 0;
       final int timing = 0;
       final int verify = 1;
+      */
       final int hash_size = 11119;
 
+      /*
       int cycles = 0;
       int hits = 0;
 
       long tStart;
 
       tStart = System.nanoTime();
+      */
 
       original = new TMSet(hash_size);
       TM machine = new TM(Paths.get(args[0]));
 
+      /*
       if (timing == 1)
          System.out.printf("parsing took %fs\n",(double)(System.nanoTime() - tStart) / 1e9);
+         */
 
+      /*
       tStart = System.nanoTime();
+      */
 
       cache = new TMHash(machine.state_count,hash_size);
 
+      /*
       if (timing == 1)
          System.out.printf("allocation took %fs\n",(double)(System.nanoTime() - tStart) / 1e9);
+         */
 
       TMBlock empty = new TMBlock(new int[block_size]);
       original.put(empty);
@@ -59,9 +69,12 @@ class TMSimulator {
       act.state = 0;
       act.direction = 0;
 
+      /*
       Scanner wait_e = new Scanner(System.in);
+      */
 
       while (true) {
+         /*
          cycles += 1;
 
          if (debug == 1) {
@@ -74,12 +87,13 @@ class TMSimulator {
             }
             System.out.println();
          }
+         */
 
          act.block = curr.b;
 
          TMAction next = cache.get(act);
 
-         if (next == null) {
+         if (next == null || curr == min || curr == max) {
             TMAction unknown = new TMAction();
             unknown.state = act.state;
             unknown.direction = act.direction;
@@ -89,7 +103,9 @@ class TMSimulator {
          }
          else {
             act = next;
+            /*
             hits += 1;
+            */
          }
 
          curr.b = act.block;
@@ -123,13 +139,18 @@ class TMSimulator {
             curr = curr.r;
          }
 
+         /*
          if (debug == 1)
             wait_e.nextLine();
+            */
       }
 
+      /*
       if (timing == 1)
          System.out.printf("simulating took %fs\n",(double)(System.nanoTime() - tStart) / 1e9);
+         */
 
+      /*
       int len = 0;
       int sum = 0;
 
@@ -150,6 +171,7 @@ class TMSimulator {
       }
 
       tStart = System.nanoTime();
+      */
       StringBuilder out = new StringBuilder((original.size())*block_size);
 
       for (int i = l_min; i < block_size; ++i)
@@ -162,7 +184,9 @@ class TMSimulator {
          out.append((char)(max.b.arr()[i]+48));
 
       System.out.println(out);
+      /*
       if (timing == 1)
          System.out.printf("printing took %fs\n",(double)(System.nanoTime() - tStart) / 1e9);
+         */
    }
 }
