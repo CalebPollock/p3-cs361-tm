@@ -7,7 +7,6 @@ import java.nio.file.*;
 
 class TMSimulator {
    public static TMHash cache;
-   public static TMSet original;
    public static final int block_size = 256;
    public static void main(String[] args) throws IOException {
 
@@ -27,7 +26,7 @@ class TMSimulator {
       tStart = System.nanoTime();
       */
 
-      original = new TMSet(hash_size);
+      //original = new TMSet(hash_size);
       TM machine = new TM(Paths.get(args[0]));
 
       /*
@@ -47,7 +46,7 @@ class TMSimulator {
          */
 
       TMBlock empty = new TMBlock(new int[block_size]);
-      original.put(empty);
+      //original.put(empty);
 
       TMNode curr = new TMNode();;
 
@@ -93,7 +92,9 @@ class TMSimulator {
 
          TMAction next = cache.get(act);
 
-         if (next == null || curr == min || curr == max) {
+         if (next == null){// || 
+            //(curr == min && next.block.bound.min == 0) || 
+            //(curr == max && next.block.bound.max == block_size - 1)) {
             TMAction unknown = new TMAction();
             unknown.state = act.state;
             unknown.direction = act.direction;
@@ -172,7 +173,7 @@ class TMSimulator {
 
       tStart = System.nanoTime();
       */
-      StringBuilder out = new StringBuilder((original.size())*block_size);
+      StringBuilder out = new StringBuilder(32);
 
       for (int i = l_min; i < block_size; ++i)
          out.append((char)(min.b.arr()[i]+48));

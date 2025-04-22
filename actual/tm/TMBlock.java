@@ -57,16 +57,20 @@ public class TMBlock {
 
       TMBlock nev = new TMBlock(workspace,new_bound);
 
+      /*
       TMBlock og = TMSimulator.original.get(nev);
+      */
 
-      if (og == null) {
-         TMSimulator.original.put(nev);
+      //if (og == null) {
+         //TMSimulator.original.put(nev);
          args.block = nev;
+         /*
       }
       else {
          og.set_bound(new_bound);
          args.block = og;
       }
+      */
 
    }
 

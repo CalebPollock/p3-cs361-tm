@@ -72,7 +72,7 @@ public class TM {
                      curr.b.bound.max = TMSimulator.block_size-1;
                      head = curr;
 
-                     TMSimulator.original.put(curr.b);
+                     //TMSimulator.original.put(curr.b);
                   }
                   else {
                      TMNode xd = new TMNode();
@@ -83,7 +83,7 @@ public class TM {
                      xd.l = curr;
                      curr = xd;
 
-                     TMSimulator.original.put(xd.b);
+                     //TMSimulator.original.put(xd.b);
                   }
                   arr = new int[TMSimulator.block_size];
                   pos = 0;
@@ -101,7 +101,7 @@ public class TM {
                   curr.b.bound.max = pos-1;
                   head = curr;
 
-                  TMSimulator.original.put(curr.b);
+                  //TMSimulator.original.put(curr.b);
                }
                else {
                   TMNode xd = new TMNode();
@@ -112,7 +112,7 @@ public class TM {
                   xd.l = curr;
                   curr = xd;
 
-                  TMSimulator.original.put(xd.b);
+                  //TMSimulator.original.put(xd.b);
                }
             }
 
