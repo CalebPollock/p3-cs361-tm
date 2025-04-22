@@ -60,13 +60,11 @@ public class TM {
          if (tape.length() != 0) {
 
             int pos = 0;
-            int blocks = 0;
 
             int[] arr = new int[TMSimulator.block_size];
 
             for (int i = 0; i < tape.length(); ++i) {
                if (pos == TMSimulator.block_size) {
-                  ++blocks;
                   if (curr == null) {
                      curr = new TMNode();
                      curr.b = new TMBlock(arr);
@@ -96,7 +94,6 @@ public class TM {
             }
 
             if (pos != 0) {
-                  ++blocks;
                if (curr == null) {
                   curr = new TMNode();
                   curr.b = new TMBlock(arr);
@@ -118,8 +115,6 @@ public class TM {
                   TMSimulator.original.put(xd.b);
                }
             }
-
-            System.out.println(blocks);
 
             tail = curr;
          }
