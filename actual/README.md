@@ -21,9 +21,10 @@ Overall, this project went really smooth due to Caleb's work he put in. After re
 
 ## Compiling and Using
 
-There are two directories, as one was used for scratchwork. To run the actual program:
+To compile and run:
 ```
-cd actual && javac tm/TMSimulator.java && java tm.TMSimulator <input file>
+javac tm/TMSimulator.java
+java tm.TMSimulator <input file>
 ```
 
 ## Sources Used
